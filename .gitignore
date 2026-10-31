@@ -1,0 +1,6 @@
+/datasets/
+**/.venv/
+**/.venv-old/
+**/node_modules/
+**/dist/
+**/__pycache__/

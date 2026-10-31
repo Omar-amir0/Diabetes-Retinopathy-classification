@@ -1,3 +1,8 @@
+### Dataset location:
+https://www.kaggle.com/competitions/aptos2019-blindness-detection/
+
+
+
 # Deployment model file locations
 
 The backend configuration in `Deployment/backend/app/core/config.py` expects the trained model files at these paths. The files were moved from the project-root `artefacts` folders into `Deployment/artefacts` without renaming the model files.

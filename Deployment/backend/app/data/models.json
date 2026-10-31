@@ -1,0 +1,97 @@
+{
+  "classes": [
+    {"grade": 0, "label": "No DR", "short": "No DR", "color": "#22c55e",
+     "description": "No visible signs of diabetic retinopathy.",
+     "recommendation": "Routine annual diabetic eye screening.", "urgency": "routine"},
+    {"grade": 1, "label": "Mild", "short": "Mild NPDR", "color": "#84cc16",
+     "description": "Microaneurysms only — small bulges in retinal blood vessels.",
+     "recommendation": "Re-screen in 6–12 months and optimise blood-sugar control.", "urgency": "monitor"},
+    {"grade": 2, "label": "Moderate", "short": "Moderate NPDR", "color": "#f59e0b",
+     "description": "More than microaneurysms: haemorrhages, hard exudates or cotton-wool spots.",
+     "recommendation": "Refer to an ophthalmologist within 3–6 months.", "urgency": "refer"},
+    {"grade": 3, "label": "Severe", "short": "Severe NPDR", "color": "#f97316",
+     "description": "Extensive haemorrhages, venous beading or IRMA — high risk of progression.",
+     "recommendation": "Urgent ophthalmology referral (within weeks).", "urgency": "urgent"},
+    {"grade": 4, "label": "Proliferative DR", "short": "PDR", "color": "#ef4444",
+     "description": "Neovascularisation or vitreous haemorrhage — sight-threatening.",
+     "recommendation": "Immediate referral for laser / anti-VEGF treatment.", "urgency": "emergency"}
+  ],
+  "models": [
+    {
+      "key": "efficientnet",
+      "name": "EfficientNetB0",
+      "family": "Transfer learning (ImageNet)",
+      "file": "efficientnetb0_aptos_complete_model.keras",
+      "input_size": 224,
+      "preprocessing": "CLAHE → pad 512² → Lanczos resize 224² · raw 0-255 (normalisation built into the network)",
+      "total_params": 4055976,
+      "trainable_params": 6405,
+      "size_mb": 17.1,
+      "architecture": ["EfficientNetB0 backbone (frozen)", "GlobalAveragePooling2D", "Dropout 0.3", "Dense 5 · softmax"],
+      "training": {"optimizer": "Adam (lr 1e-4)", "loss": "Categorical cross-entropy", "batch_size": 8, "epochs": 30, "best_epoch": 22, "early_stopping": "val_accuracy, patience 12"},
+      "evaluation_split": "test",
+      "metrics": {"accuracy": 0.7745, "qwk": 0.8294, "macro_f1": 0.5558, "weighted_f1": 0.759, "val_accuracy": 0.78},
+      "per_class": [
+        {"grade": 0, "precision": 0.949, "recall": 0.963, "f1": 0.956, "support": 271},
+        {"grade": 1, "precision": 0.511, "recall": 0.429, "f1": 0.466, "support": 56},
+        {"grade": 2, "precision": 0.647, "recall": 0.820, "f1": 0.724, "support": 150},
+        {"grade": 3, "precision": 0.462, "recall": 0.207, "f1": 0.286, "support": 29},
+        {"grade": 4, "precision": 0.480, "recall": 0.273, "f1": 0.348, "support": 44}
+      ],
+      "confusion_matrix": null,
+      "figures": {"training_curves": "efficientnet_training_curves", "confusion_matrix": "efficientnet_confusion_matrix"},
+      "highlights": ["Best overall model — highest accuracy, QWK and macro-F1", "Small (17 MB) and fast on CPU"],
+      "recommended": true
+    },
+    {
+      "key": "resnet50",
+      "name": "ResNet50",
+      "family": "Transfer learning (ImageNet)",
+      "file": "resnet50_aptos_complete_model.keras",
+      "input_size": 224,
+      "preprocessing": "CLAHE → pad 512² → Lanczos resize 224² → resnet50.preprocess_input (BGR, mean-centred)",
+      "total_params": 23597957,
+      "trainable_params": 10245,
+      "size_mb": 95.1,
+      "architecture": ["ResNet50 backbone (frozen)", "GlobalAveragePooling2D", "Dropout 0.3", "Dense 5 · softmax"],
+      "training": {"optimizer": "Adam (lr 1e-4) + ReduceLROnPlateau", "loss": "Categorical cross-entropy (label smoothing 0.05)", "batch_size": 32, "epochs": 20, "best_epoch": 18, "early_stopping": "val_accuracy, patience 5"},
+      "evaluation_split": "validation",
+      "metrics": {"accuracy": 0.7727, "qwk": null, "macro_f1": null, "weighted_f1": null, "val_accuracy": 0.7727},
+      "per_class": null,
+      "confusion_matrix": null,
+      "figures": {"training_curves": "resnet50_training_curves", "confusion_matrix": null},
+      "highlights": ["Deepest backbone (23.6 M params)", "Only validation accuracy reported — not yet evaluated on the held-out test split"],
+      "recommended": false
+    },
+    {
+      "key": "cnn",
+      "name": "Custom CNN (baseline)",
+      "family": "Trained from scratch",
+      "file": "aptos_cnn_512_clahe.keras",
+      "input_size": 512,
+      "preprocessing": "CLAHE → pad 512² · raw 0-255 (Rescaling 1/255 inside the network)",
+      "total_params": 23909,
+      "trainable_params": 23909,
+      "size_mb": 0.3,
+      "architecture": ["Rescaling 1/255", "Conv2D 16 + MaxPool", "Conv2D 32 + MaxPool", "Conv2D 64 + MaxPool", "GlobalAveragePooling2D", "Dropout 0.3", "Dense 5 · softmax"],
+      "training": {"optimizer": "Adam", "loss": "Sparse categorical cross-entropy", "batch_size": 4, "epochs": 30, "best_epoch": 19, "early_stopping": "val_loss, patience 5"},
+      "evaluation_split": "test",
+      "metrics": {"accuracy": 0.7182, "qwk": 0.7224, "macro_f1": 0.357, "weighted_f1": 0.654, "val_accuracy": 0.7327},
+      "per_class": [
+        {"grade": 0, "precision": 0.923, "recall": 0.930, "f1": 0.926, "support": 271},
+        {"grade": 1, "precision": 0.571, "recall": 0.071, "f1": 0.127, "support": 56},
+        {"grade": 2, "precision": 0.521, "recall": 0.920, "f1": 0.665, "support": 150},
+        {"grade": 3, "precision": 1.000, "recall": 0.034, "f1": 0.067, "support": 29},
+        {"grade": 4, "precision": 0.000, "recall": 0.000, "f1": 0.000, "support": 44}
+      ],
+      "confusion_matrix": [[252, 0, 19, 0, 0], [8, 4, 43, 0, 1], [10, 2, 138, 0, 0], [1, 0, 24, 1, 3], [2, 1, 41, 0, 0]],
+      "figures": {"training_curves": "training_curves_512_clahe", "confusion_matrix": "confusion_matrix_512_clahe"},
+      "highlights": ["Lightweight baseline (~24 K params)", "Collapses minority grades into 'Moderate' — shows why transfer learning is needed"],
+      "recommended": false
+    }
+  ],
+  "ensemble": {
+    "method": "Soft voting — mean of the three models' class probabilities",
+    "note": "Ensemble quality has not been measured on the test split; it is offered as a second opinion."
+  }
+}

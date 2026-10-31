@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: light;
+    background: #ffffff;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100dvh;
+    margin: 0;
+    background: #ffffff;
+    color: #0f172a;
+    text-rendering: optimizeLegibility;
+  }
+
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  }
+
+  ::selection {
+    background: #dfe3ff;
+    color: #1428a0;
+  }
+}
+
+/* Automatic Clinical Light ("White") Mode overrides so all surfaces look like a clean hospital EHR/PACS UI */
+html:not(.dark) .bg-slate-900\/90,
+html:not(.dark) .bg-slate-900\/80,
+html:not(.dark) .bg-slate-900\/75,
+html:not(.dark) .bg-slate-900\/70,
+html:not(.dark) .bg-slate-900\/60,
+html:not(.dark) .bg-slate-900\/50,
+html:not(.dark) .bg-slate-900 {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+}
+
+html:not(.dark) .bg-slate-950\/90,
+html:not(.dark) .bg-slate-950\/85,
+html:not(.dark) .bg-slate-950\/80,
+html:not(.dark) .bg-slate-950\/70,
+html:not(.dark) .bg-slate-950\/60,
+html:not(.dark) .bg-slate-950 {
+  background-color: #f8fafc !important;
+}
+
+html:not(.dark) .border-slate-800,
+html:not(.dark) .border-slate-800\/80,
+html:not(.dark) .border-slate-700 {
+  border-color: #e2e8f0 !important;
+}
+
+html:not(.dark) .divide-slate-800\/80 > :not([hidden]) ~ :not([hidden]),
+html:not(.dark) .divide-slate-800\/70 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #e2e8f0 !important;
+}
+
+html:not(.dark) .text-white:not(.keep-white) {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .text-slate-100:not(.keep-white),
+html:not(.dark) .text-slate-200:not(.keep-white) {
+  color: #1e293b !important;
+}
+
+html:not(.dark) .text-slate-300:not(.keep-white) {
+  color: #334155 !important;
+}
+
+html:not(.dark) .text-slate-400:not(.keep-white) {
+  color: #475569 !important;
+}
+
+html:not(.dark) .text-blue-200:not(.keep-white),
+html:not(.dark) .text-blue-300:not(.keep-white) {
+  color: #1d4ed8 !important;
+}
+
+html:not(.dark) .text-blue-400:not(.keep-white) {
+  color: #1428A0 !important;
+}
+
+html:not(.dark) .text-emerald-300:not(.keep-white),
+html:not(.dark) .text-emerald-400:not(.keep-white) {
+  color: #047857 !important;
+}
+
+html:not(.dark) .text-amber-300:not(.keep-white),
+html:not(.dark) .text-amber-400:not(.keep-white) {
+  color: #b45309 !important;
+}
+
+html:not(.dark) .text-orange-300:not(.keep-white),
+html:not(.dark) .text-orange-400:not(.keep-white) {
+  color: #c2410c !important;
+}
+
+@media print {
+  header, footer, .no-print {
+    display: none !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}

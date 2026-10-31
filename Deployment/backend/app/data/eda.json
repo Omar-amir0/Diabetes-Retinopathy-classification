@@ -1,0 +1,115 @@
+{
+  "dataset": {
+    "name": "APTOS 2019 Blindness Detection",
+    "source": "Asia Pacific Tele-Ophthalmology Society · Aravind Eye Hospital (India)",
+    "url": "https://www.kaggle.com/competitions/aptos2019-blindness-detection/overview",
+    "labelled_images": 3662,
+    "unlabelled_test_images": 1928,
+    "image_format": "RGB fundus photographs (PNG)",
+    "official_metric": "Quadratic Weighted Kappa (QWK)",
+    "audit": {"missing_values": 0, "duplicate_ids": 0, "invalid_grades": 0, "unreadable_images": 0, "orphan_images": 0, "color_mode": "RGB (100%)"}
+  },
+  "class_distribution": [
+    {"grade": 0, "label": "No DR", "count": 1805, "percent": 49.29},
+    {"grade": 1, "label": "Mild", "count": 370, "percent": 10.10},
+    {"grade": 2, "label": "Moderate", "count": 999, "percent": 27.28},
+    {"grade": 3, "label": "Severe", "count": 193, "percent": 5.27},
+    {"grade": 4, "label": "Proliferative DR", "count": 295, "percent": 8.06}
+  ],
+  "top_dimensions": [
+    {"size": "1050 × 1050", "count": 974},
+    {"size": "2416 × 1736", "count": 638},
+    {"size": "2588 × 1958", "count": 533},
+    {"size": "3216 × 2136", "count": 410},
+    {"size": "2048 × 1536", "count": 351},
+    {"size": "819 × 614", "count": 287},
+    {"size": "3388 × 2588", "count": 141},
+    {"size": "1504 × 1000", "count": 92},
+    {"size": "1844 × 1226", "count": 61},
+    {"size": "4288 × 2848", "count": 52},
+    {"size": "640 × 480", "count": 42},
+    {"size": "2896 × 1944", "count": 34},
+    {"size": "2144 × 1424", "count": 28}
+  ],
+  "unique_resolutions": 17,
+  "per_grade_stats": [
+    {"grade": 0, "width": 1433.4, "height": 1206.7, "aspect_ratio": 1.167, "brightness_mean": 0.3501, "brightness_std": 0.0784, "saturation_mean": 0.4605, "edge_density": 0.0202, "file_mb": 1.62},
+    {"grade": 1, "width": 2471.4, "height": 1784.7, "aspect_ratio": 1.375, "brightness_mean": 0.3287, "brightness_std": 0.0636, "saturation_mean": 0.4751, "edge_density": 0.0136, "file_mb": 2.56},
+    {"grade": 2, "width": 2603.9, "height": 1846.5, "aspect_ratio": 1.404, "brightness_mean": 0.3386, "brightness_std": 0.0655, "saturation_mean": 0.4395, "edge_density": 0.0152, "file_mb": 3.13},
+    {"grade": 3, "width": 2590.7, "height": 1840.8, "aspect_ratio": 1.404, "brightness_mean": 0.3181, "brightness_std": 0.0731, "saturation_mean": 0.4013, "edge_density": 0.0174, "file_mb": 3.13},
+    {"grade": 4, "width": 2632.3, "height": 1874.5, "aspect_ratio": 1.399, "brightness_mean": 0.3262, "brightness_std": 0.0674, "saturation_mean": 0.4234, "edge_density": 0.0145, "file_mb": 3.34}
+  ],
+  "overall_stats": {
+    "width": {"min": 474, "median": 2144, "max": 4288, "mean": 2015.2},
+    "height": {"min": 358, "median": 1536, "max": 2848, "mean": 1526.8},
+    "aspect_ratio": {"min": 1.0, "median": 1.333, "max": 1.506, "mean": 1.284},
+    "brightness_mean": {"min": 0.108, "median": 0.3546, "max": 0.6055, "mean": 0.3412}
+  },
+  "preprocessing": {
+    "steps": [
+      {"title": "Load & orient", "detail": "Decode image, apply EXIF transpose, convert to RGB."},
+      {"title": "CLAHE", "detail": "Contrast-Limited Adaptive Histogram Equalisation on the L channel of LAB (clip 2.0, 8×8 tiles) — enhances vessels, microaneurysms and exudates without shifting colour."},
+      {"title": "Pad to square", "detail": "Preserve aspect ratio; Lanczos resize to fit 512×512 with centred black padding (no cropping)."},
+      {"title": "Model resize", "detail": "512×512 for the custom CNN; Lanczos-3 resize to 224×224 for EfficientNetB0 / ResNet50."}
+    ],
+    "alternatives_tested": [
+      {"name": "Ben Graham enhancement", "detail": "4·(img − GaussianBlur(img, σ=10)) + 128 — strong local-contrast filter; kept as an experiment.", "figure": "contrast_comparison"},
+      {"name": "Conservative cropping", "detail": "Crop black borders before padding — skipped for most images to avoid cutting the retina.", "figure": "crop_comparison"},
+      {"name": "Resize strategy", "detail": "Stretch vs aspect-preserving pad — padding chosen to keep lesion geometry.", "figure": "resize_comparison"}
+    ]
+  },
+  "clahe_effect": [
+    {"metric": "brightness_mean", "label": "Mean brightness", "raw": 0.32767, "processed": 0.33062, "change": 0.00295, "ci_low": -0.00023, "ci_high": 0.00613},
+    {"metric": "brightness_std", "label": "Brightness std (contrast)", "raw": 0.06937, "processed": 0.12442, "change": 0.05505, "ci_low": 0.05222, "ci_high": 0.05787},
+    {"metric": "brightness_p05", "label": "Dark tail (p05)", "raw": 0.23541, "processed": 0.07555, "change": -0.15986, "ci_low": -0.17203, "ci_high": -0.14769},
+    {"metric": "brightness_p95", "label": "Bright tail (p95)", "raw": 0.42848, "processed": 0.49195, "change": 0.06348, "ci_low": 0.06068, "ci_high": 0.06627},
+    {"metric": "saturation_mean", "label": "Saturation", "raw": 0.43479, "processed": 0.39397, "change": -0.04082, "ci_low": -0.04427, "ci_high": -0.03737},
+    {"metric": "edge_density", "label": "Edge density (detail)", "raw": 0.0159, "processed": 0.05155, "change": 0.03565, "ci_low": 0.0338, "ci_high": 0.03749}
+  ],
+  "clahe_sample_size": 400,
+  "splits": [
+    {"split": "train", "total": 6315, "counts": [1263, 1263, 1263, 1263, 1263], "originals": 2562, "augmented": 3753},
+    {"split": "validation", "total": 550, "counts": [271, 56, 150, 29, 44], "originals": 550, "augmented": 0},
+    {"split": "test", "total": 550, "counts": [271, 56, 150, 29, 44], "originals": 550, "augmented": 0}
+  ],
+  "augmentation": {
+    "policy": "Only minority grades (1–4) of the training split are augmented until each matches grade 0 (1,263). Validation and test stay untouched.",
+    "transforms": ["Random flip (horizontal + vertical)", "Random rotation ±8%", "Random zoom ±8%", "Random contrast ±10%"],
+    "per_class": [
+      {"grade": 0, "label": "No DR", "original": 1263, "augmented": 0},
+      {"grade": 1, "label": "Mild", "original": 258, "augmented": 1005},
+      {"grade": 2, "label": "Moderate", "original": 699, "augmented": 564},
+      {"grade": 3, "label": "Severe", "original": 135, "augmented": 1128},
+      {"grade": 4, "label": "Proliferative DR", "original": 207, "augmented": 1056}
+    ],
+    "leakage_check": "Passed — original train / validation / test IDs are disjoint and every raw ID appears exactly once."
+  },
+  "insights": [
+    {"title": "Severe class imbalance", "detail": "Half of the images are 'No DR' while 'Severe' is only 5.3% — a 9.4 : 1 ratio. Accuracy alone is misleading; we report macro-F1 and QWK.", "type": "warning"},
+    {"title": "Resolution differs by grade", "detail": "Grade 0 images are mostly 1050×1050 (aspect 1.17) while diseased grades are ~2500×1800 (aspect ≈ 1.40). After square padding the black-border pattern differs by class — a potential shortcut models could exploit. Grad-CAM in the Diagnose page helps check this.", "type": "warning"},
+    {"title": "CLAHE triples visible detail", "detail": "On 400 paired images edge density rose from 0.016 to 0.052 (×3.2) and contrast (brightness std) nearly doubled, while mean brightness stayed the same.", "type": "success"},
+    {"title": "Clean dataset", "detail": "No missing labels, duplicates, unreadable or orphan files; all 3,662 images are RGB.", "type": "success"},
+    {"title": "Augmentation is heavy for rare grades", "detail": "Severe has 135 originals expanded to 1,263 (~8×). Rotations/flips create variety but cannot add new pathology — minority-grade recall remains the main weakness.", "type": "info"},
+    {"title": "17 different cameras / resolutions", "detail": "Images range from 474×358 to 4288×2848, so every image is standardised to 512×512 before training.", "type": "info"}
+  ],
+  "figures": [
+    {"key": "raw_class_balance", "title": "Raw class balance", "group": "raw", "caption": "Grade distribution of the 3,662 labelled training images."},
+    {"key": "raw_top_image_dimensions", "title": "Most common raw resolutions", "group": "raw", "caption": "Ten most frequent width × height combinations."},
+    {"key": "raw_image_metric_distributions", "title": "Raw image quality metrics by grade", "group": "raw", "caption": "Aspect ratio, brightness, brightness variation and edge density per grade."},
+    {"key": "clahe_preview", "title": "Original vs CLAHE (one image per grade)", "group": "preprocessing", "caption": "CLAHE on the LAB lightness channel enhances vessels and lesions."},
+    {"key": "contrast_comparison", "title": "Ben Graham contrast enhancement", "group": "preprocessing", "caption": "Alternative preprocessing that was evaluated."},
+    {"key": "crop_comparison", "title": "Conservative cropping experiment", "group": "preprocessing", "caption": "Crop + pad resize to 512×512 — note the different padding for square vs wide images."},
+    {"key": "resize_comparison", "title": "Resize comparison", "group": "preprocessing", "caption": "Effect of different resize strategies."},
+    {"key": "before_after_metric_means", "title": "Matched raw vs processed statistics", "group": "preprocessing", "caption": "Mean image metrics before and after preprocessing (400 paired images)."},
+    {"key": "before_after_metric_changes", "title": "Paired change after preprocessing (95% CI)", "group": "preprocessing", "caption": "Processed − raw, with 95% confidence intervals."},
+    {"key": "before_after_metric_distributions", "title": "Metric distributions before / after", "group": "preprocessing", "caption": "KDE of each image metric for raw vs processed images."},
+    {"key": "before_after_changes_by_grade", "title": "Preprocessing change by grade", "group": "preprocessing", "caption": "Heat-map of the mean change in each metric per diagnosis."},
+    {"key": "preprocessed_image_dimensions", "title": "Preprocessed image dimensions", "group": "preprocessing", "caption": "All 7,415 processed images are exactly 512×512."},
+    {"key": "processed_class_balance_by_split", "title": "Class balance by split", "group": "splits", "caption": "Balanced training split vs untouched validation and test splits."},
+    {"key": "processed_train_original_vs_augmented", "title": "Training originals vs augmented", "group": "splits", "caption": "How many augmented images were generated for each grade."},
+    {"key": "augmentation_preview", "title": "Augmentation examples", "group": "splits", "caption": "One original and one augmented image for each minority grade."},
+    {"key": "processed_image_metrics_by_split", "title": "Processed image statistics by split", "group": "splits", "caption": "Brightness, contrast, saturation and edge density are consistent across splits."},
+    {"key": "processed_file_sizes_by_split", "title": "Processed PNG file size by split", "group": "splits", "caption": "File-size distribution after preprocessing."}
+  ]
+}
+
